@@ -6,19 +6,20 @@ function Initialize(){
 
   var county1 = "Autauga, AL";
   var county2 = "Baldwin, AL";
+              
   buildCharts(county1, county2);
 
 };
 Initialize();
 
-buildCharts("Autauga, AL","Baldwin, AL")
+// buildCharts("Howard, MD","Frederick, MD")
   //filter county data for selecting county1 and county 2 and build charts
 function buildCharts(county1, county2) {
 
   d3.json(url).then(data => {
 
                     /*
-              2000: "16138",
+              2000: "16138", 
               2001: "16211",
               2002: "15944",
               2003: "16484",
@@ -52,6 +53,10 @@ function buildCharts(county1, county2) {
     var selector_county1 = county1;
     var selector_county2 = county2;
 
+    console.log('county / selector test');
+    console.log(county1);
+    console.log(selector_county1);
+
     var county_data = data['data'];
 
     console.log(data);
@@ -61,7 +66,6 @@ function buildCharts(county1, county2) {
     // Filter for county1 and county2 selection
     var filtered_county1 = county_data.filter(d => d['GeoName'] == selector_county1);
     var filtered_county2 = county_data.filter(d => d['GeoName'] == selector_county2);
-    
 
     /* Filter for plot variables AKA description aliased as
           Pop -> Population (persons) 3/
@@ -80,6 +84,12 @@ function buildCharts(county1, county2) {
       AEJ : 'Average earnings per job (dollars)', 
       AWS : 'Average wages and salaries'
     };
+
+    console.log('filterd counties');
+    console.log(filtered_county1);
+    console.log(filtered_county2);
+
+
 
     // Plot variables for county1
     var Pop_county1 = filtered_county1.filter(d => d['Description'] == description['Pop']).map(m => Object.values(m).slice(0,20))[0];
@@ -106,7 +116,7 @@ function buildCharts(county1, county2) {
 
     //--------MY PLOT--------
     function buildPlot() {
-            
+      //d3.select("#ecosplot").HTML("")   
          
       var button_layer_2_height = 1.2
       
@@ -305,115 +315,56 @@ function buildCharts(county1, county2) {
       }
 
 
-      Plotly.plot("myDiv", data, layout, {showSendToCloud: true});
+      Plotly.newPlot("ecosplot", data, layout, {showSendToCloud: true});
 
     
       
     };
-        
-    buildPlot();
-
-//     //--------BUBBLE CHART--------
-//     function bubbleChart(){
-//       var trace1 = {
-//         x: otu_ids_plt_bubble,
-//         y: sample_values_plt,
-//         text: otu_labels_plt,
-//         mode: 'markers',
-//         marker: {
-//           color: otu_ids_plt_bubble,
-//           size: sample_values_plt
-//         },
-                
-//       };
-      
-//       var data = [trace1];
-      
-//       var layout = {
-//         title:  `Plot showing top 10 OTUs of subject ID: ${subject_id}`,
-//         // showlegend: false,
-//         // height: 600,
-//         // width: 600
-//       };
-      
-//       Plotly.newPlot('bubble', data, layout);
-
-//     };
-        
-//     bubbleChart();
-
-//     //--------GAUGE--------
-//     function buildGauge() {
-//       var data = [
-//         {
-//           type: "indicator",
-//           mode: "gauge+number",
-          
-//           value: wfreq,
-//           title: { text: "Wash Frequency", font: { size: 17 } },
-//           gauge: {
-//             axis: { range: [null, 10], tickwidth: 1, tickcolor: "royalblue" },
-//             bar: { color: "royalblue" },
-//             bgcolor: "white",
-//             borderwidth: 2,
-//             bordercolor: "gray",
-//             steps: [
-//               { range: [0, 10], color: "lavender" }          
-//             ],        
-//           }
-//         }
-//       ];
     
-//       var layout = {
-//         width: 300,
-//         height: 400,
-//         margin: { t: 0, r: 0, l: 0, b: 0 },
-//       };
-      
-//       Plotly.newPlot('gauge', data, layout);
-//     };
-
-//     buildGauge()
-        
-//     function buildMetadata() {
-
-//       row = d3.select("table");
-//       row.html("")
-//       row.append('tr').append("td").text(`Id: ${id}`);
-      
-//       row.append('tr').append("td").text(`ethnicity: ${ethnicity}`);
-//       row.append('tr').append("td").text(`gender: ${gender}`);
-//       row.append('tr').append("td").text(`age: ${age}`);
-//       row.append('tr').append("td").text(`location: ${location}`);
-//       row.append('tr').append("td").text(`bbtype: ${bbtype}`);
-//       row.append('tr').append("td").text(`wfreq: ${wfreq}`);
-//     };
-
-//     buildMetadata()
-//   });
-// }
-
-// function buildOptions(selector, otuIDs) { 
-  
-//   otuIDs.forEach(name => {
-//       option = selector.append('option');
-//       option.property('value', name);
-//       option.text(name);
+    buildPlot()   
+    
     });
+    
 }
 
 
 // Build a listener on change function on county1 and county2
 function handleChange() {
   
-  var selector_county1 = d3.select('#city1');
-  var selector_county2 = d3.select('#city2');
+  var selector_county1 = d3.select('#county_input');
+  var selector_county2 = d3.select('#county_input');
   var county1 = selector_county1.property('value');
   var county2 = selector_county2.property('value');
+console.log('-----selectors----')
+
+console.log('-----county1----')
+
+console.log('-----county2----')
+
   buildCharts(county1, county2);
 }
 
-var selector_county1 = d3.select('#city1');
-var selector_county2 = d3.select('#city2');
-selector_county1.on('change', handleChange);
-selector_county2.on('change', handleChange);
+// var selector_county1 = d3.select('#county_input');
+// var selector_county2 = d3.select('#county_input');
+// console.log('-----selector outside----')
+// console.log(selector_county2)
+// var submit = d3.select('.btn-success');
+// submit.on('click', handleChange);
+
+function processSubmit() {
+  console.log('test');
+  input_tokens = document.getElementsByClassName('token-input-token');
+
+  county1 = input_tokens[0].innerText.replace('×','').replace('\n','').trim();
+  county2 = input_tokens[1].innerText.replace('×','').replace('\n','').trim();
+  
+  console.log(county1);
+  console.log(county2);
+  //console.log(input_tokens[0]);
+  buildCharts(county1, county2);
+
+
+
+}
+
+document.getElementById('submit').addEventListener('click', processSubmit);
